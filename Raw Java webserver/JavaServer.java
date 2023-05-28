@@ -1,31 +1,36 @@
-import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
+
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
 
 public class JavaServer {
     public static void main(String[] args) throws IOException {
         int port = 8080;
         String host = "localhost";
 
-        String response = "Starting server on port " + port + "...\r\n" +
-                "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html\r\n" +
-                "\r\n" +
-                "<h1>Hello World!</h1>";
+        String response = "<h1>Hello World!</h1>";
+        int statusCode = 200;
 
         InetSocketAddress socketAddress = new InetSocketAddress(host, port);
 
-        HttpServer httpServer = HttpServer.create(socketAddress , 0);
+        HttpServer httpServer = HttpServer.create(socketAddress, 0);
 
-        httpServer.createContext("/", httpExchange -> {
-            httpExchange.getResponseHeaders().set("Content-Type", "text/plain");
-            httpExchange.sendResponseHeaders(200, response.getBytes().length);
-            httpExchange.getResponseBody().write(response.getBytes());
-            httpExchange.close();
+        httpServer.createContext("/", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange httpExchange) throws IOException {
+                httpExchange.getResponseHeaders().set("Content-Type", "text/html");
+                httpExchange.sendResponseHeaders(statusCode, response.getBytes().length);
+                OutputStream outputStream = httpExchange.getResponseBody();
+                outputStream.write(response.getBytes());
+                outputStream.close();
+            }
         });
 
-        System.out.println("Servidor iniciado em http://localhost:8080/");
+        httpServer.start();
 
+        System.out.println("Servidor iniciado em http://localhost:8080/");
     }
 }
