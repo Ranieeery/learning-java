@@ -22,4 +22,5 @@ public class ExampleResources {
         List<ExampleDTO> list = services.findAll();
         return ResponseEntity.ok().body(list);
     }
+
 }
