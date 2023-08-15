@@ -17,5 +17,4 @@ public class Example implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
 }
