@@ -20,4 +20,5 @@ public class ExampleDTO implements java.io.Serializable {
         this.id = entity.getId();
         this.name = entity.getName();
     }
+
 }
